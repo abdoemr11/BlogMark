@@ -10,6 +10,7 @@ const loginRouter = require('./controllers/login')
 const middleware = require('./middleware')
 const { userExtractor } = require('./middleware')
 const testingRouter = require('./controllers/testing')
+const path = require('path')
 
 
 // eslint-disable-next-line no-undef
@@ -25,6 +26,13 @@ mongoose.connect(mongoUrl)
 app.use(cors())
 app.use(express.json())
 app.use(middleware.tokenExtractor)
+
+app.use(express.static(path.join(__dirname, 'frontend/build')))
+
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'frontend/index.html'))
+});
+
 app.use('/api/blogs',middleware.userExtractor,blogRouter)
 app.use(userRouter)
 app.use('/api/login', loginRouter)
