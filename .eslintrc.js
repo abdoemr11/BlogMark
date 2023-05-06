@@ -16,7 +16,8 @@ module.exports = {
         ],
         'linebreak-style': [
             'error',
-            'windows'
+            // eslint-disable-next-line no-undef
+            process.platform === 'win32' ? 'windows' : 'unix'
         ],
         'quotes': [
             'error',
