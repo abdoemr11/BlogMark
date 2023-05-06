@@ -82,7 +82,7 @@ describe('api testing',  () => {
         }
     })
     test('the blog list has the right number of blogs', async () => {
-        blogsResult = await api.get('/api/blogs')
+        let blogsResult = await api.get('/api/blogs')
         expect(blogsResult.body.length).toBe(blogs.length)
 
     })

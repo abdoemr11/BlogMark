@@ -1,7 +1,6 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const blogRouter = require('express').Router()
-const jwt = require('jsonwebtoken')
 
 blogRouter.get('/', async (request, response) => {
     console.log('Getting all blogs')
@@ -11,7 +10,7 @@ blogRouter.get('/', async (request, response) => {
 
 })
 
-blogRouter.post('/', async (request, response, next) => {
+blogRouter.post('/', async (request, response) => {
     const blog = request.body
     //check if the blog contain the required attributes
     //verify that user is logged in
@@ -26,7 +25,7 @@ blogRouter.post('/', async (request, response, next) => {
 
     let isValidBlog = true
     for (let p of mustHaveProps) {
-        if(!blog.hasOwnProperty(p)) {
+        if(!Object.prototype.hasOwnProperty.call(blog,p)) {
             isValidBlog = false
             //TODO remove for testing only
             break
@@ -36,7 +35,7 @@ blogRouter.post('/', async (request, response, next) => {
         const user =await User.findById(request.user.id)
         blog.user = user._id
         //if no likes is defined define the likes to be zero
-        if(!blog.hasOwnProperty('likes'))
+        if(!Object.prototype.hasOwnProperty.call(blog ,'likes'))
             blog['likes'] = 0
         const blogObj = new Blog(blog)
         const resultBlog = await blogObj.save()
@@ -75,7 +74,7 @@ blogRouter.put('/:id', async (request, response, next) => {
     const mustHaveProps = ['title', 'author', 'url', 'likes', 'id']
     let isValidBlog = true
     for (let p of mustHaveProps) {
-        if(!blog.hasOwnProperty(p)) {
+        if(!Object.prototype.hasOwnProperty.call(blog,p)) {
             isValidBlog = false
             //TODO remove for testing only
             break

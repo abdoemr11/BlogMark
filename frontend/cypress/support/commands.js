@@ -36,6 +36,7 @@ Cypress.Commands.add('login', (user) => {
   cy.request('POST', 'http://localhost:3003/api/login', user).then(function (res){
     const loggedUser = res.body
     localStorage.setItem('user', JSON.stringify(loggedUser))
+    // eslint-disable-next-line no-unused-vars
     cy.visit('http://localhost:3000').then(result => {
       console.log(loggedUser)
       return loggedUser

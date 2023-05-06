@@ -1,0 +1,15 @@
+# Directories
+node_modules/
+coverage/
+build/
+
+# Files
+package.json
+package-lock.json
+yarn.lock
+*.config.js
+*.config.ts
+*.config.json
+*.d.ts
+*.test.tsx
+*.test.ts

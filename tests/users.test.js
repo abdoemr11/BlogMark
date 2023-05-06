@@ -15,6 +15,7 @@ describe('Create New Users', () => {
         let result = await api.post('/api/users')
             .send(user)
             .expect(201)
+        return result
     })
     test('username is less than 3 letters should be error', async () => {
         const user = {
@@ -25,6 +26,7 @@ describe('Create New Users', () => {
         let result = await api.post('/api/users')
             .send(user)
             .expect(400)
+        return result
     })
     test('username should be unique', async () => {
         const user = {

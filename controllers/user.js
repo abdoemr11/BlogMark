@@ -1,9 +1,6 @@
 const userRouter = require('express').Router()
 const User = require('../models/user')
-const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
-const { json, response } = require('express')
-
 class ValidationError extends Error {
     constructor(message) {
         super(message)
@@ -37,6 +34,7 @@ userRouter.post('/api/users', async (req,res,next) => {
 
 
 })
+// eslint-disable-next-line no-unused-vars
 userRouter.get('/api/users', async (req, res, next) => {
     const users = await User.find({}).populate('blogs')
     res.json(users)

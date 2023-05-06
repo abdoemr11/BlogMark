@@ -3,7 +3,7 @@ const User = require('../models/user')
 const loginRouter = require('express').Router()
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
-loginRouter.post('/', async (req, res, next) => {
+loginRouter.post('/', async (req, res) => {
     const { username, password } = req.body
     const user = await User.findOne({ username: username })
     const passIsCorrect = !user ? false
