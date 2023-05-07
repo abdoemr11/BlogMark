@@ -33,6 +33,7 @@ blogRouter.post('/', async (request, response) => {
     }
     if(isValidBlog) {
         const user =await User.findById(request.user.id)
+        console.log(user)
         blog.user = user._id
         //if no likes is defined define the likes to be zero
         if(!Object.prototype.hasOwnProperty.call(blog ,'likes'))
