@@ -1,9 +1,9 @@
 # BlogMark
 A collaborative space to bookmark your favorite blog post and share it with others. 
 
-![Blogmark login page]("pictures\login1.PNG")
-![Blogmark blogs list]("pictures\blogs.PNG")
-![Blogmark users list]("pictures\Capture.PNG")
+![Blogmark login page](./pictures/login1.PNG)
+![Blogmark blogs list](./pictures/blogs.PNG)
+![Blogmark users list](./pictures/Capture.PNG)
 # Technology Stack
 - node js v16.19.0 & Express
 - React v18.1.0
