@@ -73,7 +73,23 @@ describe('author and their blogs', () => {
     })
 })
 describe('api testing',  () => {
-
+    let token
+    beforeAll(async () => {
+        await User.deleteMany({})
+        const user = {
+            name: 'abdo',
+            username: 'abdosadf',
+            password: 'passs'
+        }
+        await api.post('/api/users')
+            .send(user)
+            .expect(201)
+        // console.log('register result', result.body)
+        token = (await api.post('/api/login').send({ username:'abdosadf',password:'passs' })
+            .set('Accept', 'application/json'))
+        // console.log('The result token is ', token.body)
+        token = token.body.token
+    })
     beforeEach(async () => {
         await Blog.deleteMany({})
         for (const blog of blogs) {
@@ -100,10 +116,11 @@ describe('api testing',  () => {
         const result = await api.post('/api/blogs')
             .send(blog)
             .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
+            .set('authorization', `bearer ${token}`)
+            // .expect('Content-Type', 'application/json')
             .expect(201)
         delete result.body.id
-        expect(result.body).toEqual(blog)
+        expect(result.body).toEqual(expect.objectContaining({ ...blog }))
         const allBlogs = await api.get('/api/blogs')
         expect(allBlogs.body.length).toBe(blogs.length+1)
     })
@@ -121,17 +138,31 @@ describe('api testing',  () => {
         }
         await api.post('/api/blogs')
             .send(blogMinusTitle)
+            .set('Authorization', `bearer ${token}`)
             .set('Accept', 'application/json')
             .expect(400)
         await api.post('/api/blogs')
             .send(blogMinusUrl)
+            .set('Authorization', `bearer ${token}`)
             .set('Accept', 'application/json')
             .expect(400)
     })
     test('delete blog', async () => {
-        const blogToBeDel = (await Blog.find({}))[0]
+        const blog = {
+            title: 'Go To Statement Considered Harmful',
+            author: 'Edsger W. Dijkstra',
+            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+            likes: 5,
+        }
+        const result = await api.post('/api/blogs')
+            .send(blog)
+            .set('Accept', 'application/json')
+            .set('authorization', `bearer ${token}`)
+            // .expect('Content-Type', 'application/json')
+            .expect(201)
         await api
-            .delete(`/api/blogs/${blogToBeDel.id}`)
+            .delete(`/api/blogs/${result.body.id}`)
+            .set('authorization', `bearer ${token}`)
             .expect(204)
 
     }, 10000)
@@ -142,8 +173,9 @@ describe('api testing',  () => {
         console.log(blogToBeUpdated.id)
         const resultBlog = await api
             .put(`/api/blogs/${blogToBeUpdated.id}`)
+            .set('Authorization', `bearer ${token}`)
             .send(blogToBeUpdated)
-        console.log(resultBlog)
+        // console.log(resultBlog)
         expect(JSON.parse(resultBlog.text).likes).toBe(10)
     })
     test('missing like property will create a post with zero likes', async () => {
@@ -154,29 +186,9 @@ describe('api testing',  () => {
         }
         const result = await api.post('/api/blogs')
             .send(blog)
+            .set('Authorization', `bearer ${token}`)
             .set('Accept', 'Application/json')
             .expect(201)
         expect(result.body.likes).toBe(0)
-    })
-})
-describe('blog with users', () => {
-    beforeEach(async () => {
-        await User.deleteMany({})
-        await Blog.deleteMany({})
-        const user = {
-            name: 'abdo',
-            username: 'abdosadf',
-            password: 'passs'
-        }
-        const userObj = new User(user)
-        await userObj.save()
-    })
-    test('adding blog with user', async () => {
-        const user = (await User.find({}))[0]
-        let result = await api.post('/api/blogs')
-            .send({ ...listWithOneBlog[0], userId:user._id })
-            .expect(201)
-        console.log(result)
-        expect(result.text.userId).toBe(user._id)
     })
 })

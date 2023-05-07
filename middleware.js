@@ -4,7 +4,7 @@ const unknownEndpoint = (request, response) => {
 }
 
 const errorHandler = (error, request, response, next) => {
-    console.log(error.name)
+    console.log(error.name, error.message)
 
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformed id' })
@@ -25,7 +25,7 @@ const tokenExtractor = (req, res, next) => {
     next()
 }
 const userExtractor = (req, res, next) => {
-    console.log(req.token)
+    // console.log(req.token)
     if(req.token) {
         req.user = jwt.verify(req.token, process.env.SECRET)
 
